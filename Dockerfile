@@ -42,18 +42,9 @@ RUN go install \
 COPY tailscale/. .
 
 # see build.sh
-ARG VERSION_LONG=""
-ENV VERSION_LONG=$VERSION_LONG
-ARG VERSION_SHORT=""
-ENV VERSION_SHORT=$VERSION_SHORT
-ARG VERSION_GIT_HASH=""
-ENV VERSION_GIT_HASH=$VERSION_GIT_HASH
 ARG TARGETARCH
 
-RUN GOARCH=$TARGETARCH go install -ldflags="-w -s\
-      -X tailscale.com/version.Long=$VERSION_LONG \
-      -X tailscale.com/version.Short=$VERSION_SHORT \
-      -X tailscale.com/version.GitCommit=$VERSION_GIT_HASH" \
+RUN GOARCH=$TARGETARCH go install -ldflags="-w -s"\
       -v ./cmd/tailscale ./cmd/tailscaled
 
 RUN upx /go/bin/tailscale && upx /go/bin/tailscaled
@@ -74,4 +65,3 @@ COPY tailscale.sh /usr/local/bin
 
 EXPOSE 22
 CMD ["/usr/local/bin/tailscale.sh"]
-
